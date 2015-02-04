@@ -1,19 +1,48 @@
+@maxlevels: 8;
+
+@column-gap-size: 20px;
+@team-height: 30px;
+@team-width: 100px;
+@level-0-spacing: 8px;
+@unit-size: @team-height * 2px + @level-0-spacing;
+
+.generate-spacing-for-levels(@level) when (@level > -1){
+    .generate-spacing-for-levels(@level - 1);
+
+    .level-@{level} > .match {
+        //((Math.pow(2, level) - 1) * this.matchUnitSize / 2) + 'px';
+        margin-top: (pow(2, @level) - 1) * @unit-size / 2px;
+
+        //((Math.pow(2, level) - 1) * this.matchUnitSize + spacing) + 'px'
+        margin-bottom: (pow(2, @level) - 1) * @unit-size + @level-0-spacing;
+    }
+}
+
+.generate-spacing-for-levels(@maxlevels);
 
 .level {
-    margin-right: 20px;
-    & > .match > .match-team-name {
-        width: 100px;
-        height: 30px;
-        padding: 5px 4px;
-        overflow: hidden;
-        text-overflow: ellipsis;
 
-        &.team-a {
-            background-color: #aaa;
+    margin-right: @column-gap-size;
+    & > .match {
+
+        &:last-child {
+            margin-bottom: @level-0-spacing;
         }
 
-        &.team-b {
-            background-color: #ccc;
+        & > .match-team-name {
+            width: @team-width;
+            height: @team-height;
+            padding: (@team-height / 6px) 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            &.team-a {
+                background-color: #aaa;
+            }
+
+            &.team-b {
+                background-color: #ccc;
+            }
         }
     }
 }

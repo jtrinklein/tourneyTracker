@@ -8,7 +8,6 @@ module tourneyTracker {
         matches: Array<Match>;
         createMatchTree(): void;
         levels: Array<Array<Match>>;
-        getStyleForLevel(lvl: number): Object;
     }
 
     export class MainCtrl {
@@ -26,26 +25,10 @@ module tourneyTracker {
             $scope.matches = new Array<Match>();
             $scope.addTeam = (name: string) => { _this.addTeam(name); };
             $scope.createMatchTree = () => { _this.createMatchTree(); };
-            $scope.getStyleForLevel = (n: number): Object => { return _this.getStyleForLevel(n); };
             for(var i = 1; i <= 29; ++i) {
                 this.addTeam('team' + i);
             }
             this.createMatchTree();
-        }
-        private calculateMarginTop(level: number): string {
-
-            return ((Math.pow(2, level) - 1) * this.matchUnitSize / 2) + 'px';
-        }
-        private calculateMarginBottom(level: number): string {
-            var spacing: number = this.spacingValue;
-            return ((Math.pow(2, level) - 1) * this.matchUnitSize + spacing) + 'px';
-        }
-
-        public getStyleForLevel(level: number): Object {
-            return {
-                'margin-top': this.calculateMarginTop(level),
-                'margin-bottom': this.calculateMarginBottom(level)
-            };
         }
 
         public createMatchTree(): void {
@@ -85,7 +68,7 @@ module tourneyTracker {
                 m.teamB = teams[i++];
             });
         }
-        
+
         private createLevelLists(rootMatch: Match): Array<Array<Match>> {
             var list: Array<Array<Match>> = [];
             var currentList: Array<Match> = [rootMatch];
