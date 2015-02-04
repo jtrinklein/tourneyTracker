@@ -4,21 +4,18 @@
 
   <div class="jumbotron">
     <h1>Teams:</h1>
-    <p>
-      <ul>
-          <li ng-repeat="team in teams"><label>{{team.name}}<label></li>
-      </ul>
+    <p><label ng-repeat="team in teams">{{team.name}},</label>
     </p>
-    <p>
+    <div class="row">
         <div>Matches:</div>
-        <span class="level" ng-repeat="level in levels">
-            <div>level {{$index}}</div>
-            <div class="match" ng-repeat="match in level">
+        <div ng-class="['level', 'level'+$index, 'col-xs-2']" ng-repeat="level in levels">
+            <div>Level {{lvl = $index}}</div>
+            <div class="match" ng-style="getStyleForLevel(lvl)" ng-repeat="match in level">
                 <div class="match-team-name team-a">{{match.getTeamNameA()}}</div>
                 <div class="match-team-name team-b">{{match.getTeamNameB()}}</div>
             </div>
-        </span>
-    </p>
+        </div>
+    </div>
     <p><label for="addTeam"
         >Add Team:</label
         ><input name="addTeam" type="text" ng-model="newTeamName"

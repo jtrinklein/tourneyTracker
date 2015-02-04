@@ -15,25 +15,20 @@
 
 
 .level {
-    width: 125px;
-    display: inline-block;
-    margin-right: 25px;
-    & > .match {
-        border: 1px solid black;
-        margin-bottom: 10px;
-        width: 102px;
-        & > .match-team-name {
-            width: 100px;
-            height: 30px;
-            padding: 5px 4px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            &.team-a {
-                background-color: #aaa;
-            }
-            &.team-b {
-                background-color: #ccc;
-            }
+    margin-right: 20px;
+    & > .match > .match-team-name {
+        width: 100px;
+        height: 30px;
+        padding: 5px 4px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &.team-a {
+            background-color: #aaa;
+        }
+
+        &.team-b {
+            background-color: #ccc;
         }
     }
 }
