@@ -16,6 +16,33 @@ module tourneyTracker {
 
         }
 
+        private setWinner(team: Team): void {
+            this.winner = team;
+            if (this.parent) {
+                this.parent.updateTeams();
+            }
+        }
+
+        public teamAWon(): void {
+            this.setWinner(this.teamA);
+        }
+
+        public teamBWon(): void {
+            this.setWinner(this.teamB);
+        }
+
+        public updateTeams(): void {
+            if (this.leftChild) {
+                this.teamA = this.leftChild.winner;
+            }
+            if (this.rightChild) {
+                this.teamB = this.rightChild.winner;
+            }
+            if(this.parent) {
+                this.parent.updateTeams();
+            }
+        }
+
         private getTeamName(team: Team): string {
             return !!team ? team.name : '???';
         }
@@ -50,31 +77,35 @@ module tourneyTracker {
     }
 
     export class MainCtrl {
+        public matchUnitSize: number;
+        public teamHeight: number;
+        public spacingValue: number;
         /* @ngInject */
         constructor(private $scope: IMainScope) {
             var _this: MainCtrl = this;
+
+            this.teamHeight = 30;
+            this.spacingValue = 8;
+            this.matchUnitSize = this.teamHeight * 2 + this.spacingValue;
             $scope.teams = new Array<Team>();
             $scope.matches = new Array<Match>();
             $scope.addTeam = (name: string) => { _this.addTeam(name); };
             $scope.createMatchTree = () => { _this.createMatchTree(); };
             $scope.getStyleForLevel = (n: number): Object => { return _this.getStyleForLevel(n); };
-            this.addTeam('team1');
-            this.addTeam('team2');
-            this.addTeam('team3');
-            this.addTeam('team4');
-            this.addTeam('team5');
-            this.addTeam('team6');
-            this.addTeam('team7');
-            this.addTeam('team8');
-            this.addTeam('team9');
+            for(var i = 1; i <= 29; ++i) {
+                this.addTeam('team' + i);
+            }
             this.createMatchTree();
         }
         private calculateMarginTop(level: number): string {
-            return ((Math.pow(2, level) - 1) * 40) + 'px';
+
+            return ((Math.pow(2, level) - 1) * this.matchUnitSize / 2) + 'px';
         }
         private calculateMarginBottom(level: number): string {
-            return (Math.pow(2, level + 1) * 40 - 60) + 'px';
+            var spacing: number = this.spacingValue;
+            return ((Math.pow(2, level) - 1) * this.matchUnitSize + spacing) + 'px';
         }
+
         public getStyleForLevel(level: number): Object {
             return {
                 'margin-top': this.calculateMarginTop(level),
@@ -85,7 +116,6 @@ module tourneyTracker {
         public createMatchTree(): void {
             var root: Match = new Match();
             var requiredLeafNodes: number = Math.ceil(this.$scope.teams.length / 2);
-            console.log(requiredLeafNodes);
             var openNodes: Array<Match> = [root];
             var leafNodes: number = 1;
             while(leafNodes < requiredLeafNodes) {
@@ -100,18 +130,29 @@ module tourneyTracker {
                     leafNodes++;
                 }
             }
-            var teams: Array<Team> = this.$scope.teams;
+
+            this.placeTeamsInOpenNodes(this.$scope.teams, openNodes);
+
+            this.$scope.levels = this.createLevelLists(root);
+        }
+
+        private placeTeamsInOpenNodes(teams: Array<Team>, openNodes: Array<Match>): void {
             if (teams.length % 2 === 1) {
+                //TODO: determine which team should get the BYE
                 teams.push(new Team('BYE'));
             }
+
+            //TODO: randomize teams?
+
             var i: number = 0;
             openNodes.forEach((m: Match): void => {
                 m.teamA = teams[i++];
                 m.teamB = teams[i++];
             });
-
+        }
+        private createLevelLists(rootMatch: Match): Array<Array<Match>> {
             var list: Array<Array<Match>> = [];
-            var currentList: Array<Match> = [root];
+            var currentList: Array<Match> = [rootMatch];
 
             while(currentList) {
                 list.unshift(currentList);
@@ -128,7 +169,7 @@ module tourneyTracker {
                 currentList = (next.length > 0) ? next : null;
             }
 
-            this.$scope.levels = list;
+            return list;
         }
 
         public addTeam(name: string): void {
