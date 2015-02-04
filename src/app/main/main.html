@@ -8,7 +8,7 @@
     </p>
     <div class="row">
         <div>Matches:</div>
-        <div ng-class="'level level-' + $index + ' col-xs-1'" ng-repeat="level in levels">
+        <div ng-class="'level level-' + $index" ng-repeat="level in levels">
             <div>Level {{$index}}</div>
             <div class="match" ng-repeat="match in level">
                 <div class="match-team-name team-a" ng-click="match.teamAWon()">{{match.getTeamNameA()}}</div>

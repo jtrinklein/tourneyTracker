@@ -1,5 +1,7 @@
-@maxlevels: 8;
+@import "../../bower_components/bootstrap/less/bootstrap.less";
 
+@maxlevels: 8;
+@level-grid-columns:2;
 @column-gap-size: 20px;
 @team-height: 30px;
 @team-width: 100px;
@@ -21,6 +23,7 @@
 .generate-spacing-for-levels(@maxlevels);
 
 .level {
+    .make-xs-column(2);
 
     margin-right: @column-gap-size;
     & > .match {
@@ -30,7 +33,7 @@
         }
 
         & > .match-team-name {
-            width: @team-width;
+            max-width: 100%;
             height: @team-height;
             padding: (@team-height / 6px) 4px;
             overflow: hidden;
