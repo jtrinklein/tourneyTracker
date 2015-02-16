@@ -1,10 +1,11 @@
 /// <reference path='./Team/Team.ts' />
-
 module tourneyTracker {
 
     export interface IMainScope extends ng.IScope {
         teams: Array<Team>;
         addTeam(name: string);
+        removeTeam(team: Team);
+        square(num: number);
         matches: Array<Match>;
         createMatchTree(): void;
         levels: Array<Array<Match>>;
@@ -16,16 +17,17 @@ module tourneyTracker {
         public spacingValue: number;
         /* @ngInject */
         constructor(private $scope: IMainScope) {
-            var _this: MainCtrl = this;
 
             this.teamHeight = 30;
             this.spacingValue = 8;
             this.matchUnitSize = this.teamHeight * 2 + this.spacingValue;
             $scope.teams = new Array<Team>();
             $scope.matches = new Array<Match>();
-            $scope.addTeam = (name: string) => { _this.addTeam(name); };
-            $scope.createMatchTree = () => { _this.createMatchTree(); };
-            for(var i = 1; i <= 29; ++i) {
+            $scope.square = (num) => Math.pow(2, num);
+            $scope.addTeam = this.addTeam.bind(this);
+            $scope.removeTeam = this.removeTeam.bind(this);
+            $scope.createMatchTree = this.createMatchTree.bind(this);
+            for (var i = 1; i <= 29; ++i) {
                 this.addTeam('team' + i);
             }
             this.createMatchTree();
@@ -36,7 +38,7 @@ module tourneyTracker {
             var requiredLeafNodes: number = Math.ceil(this.$scope.teams.length / 2);
             var openNodes: Array<Match> = [root];
             var leafNodes: number = 1;
-            while(leafNodes < requiredLeafNodes) {
+            while (leafNodes < requiredLeafNodes) {
                 var node: Match = openNodes[0];
                 var newLeaf: Match = new Match();
                 openNodes.push(newLeaf);
@@ -73,7 +75,7 @@ module tourneyTracker {
             var list: Array<Array<Match>> = [];
             var currentList: Array<Match> = [rootMatch];
 
-            while(currentList) {
+            while (currentList) {
                 list.unshift(currentList);
                 var next: Array<Match> = [];
                 currentList.forEach((m): void => {
@@ -93,6 +95,13 @@ module tourneyTracker {
 
         public addTeam(name: string): void {
             this.$scope.teams.push(new Team(name));
+        }
+
+        public removeTeam(team: Team): void {
+            var index: number = this.$scope.teams.indexOf(team);
+            if (index > -1) {
+                this.$scope.teams.splice(index, 1);
+            }
         }
     }
 }

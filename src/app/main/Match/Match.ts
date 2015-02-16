@@ -36,7 +36,7 @@ module tourneyTracker {
             if (this.rightChild) {
                 this.teamB = this.rightChild.winner;
             }
-            if(this.parent) {
+            if (this.parent) {
                 this.parent.updateTeams();
             }
         }
@@ -51,6 +51,14 @@ module tourneyTracker {
 
         public getTeamNameB(): string {
             return this.getTeamName(this.teamB);
+        }
+
+        public isTeamAWinner(): boolean {
+            return this.winner && this.winner === this.teamA;
+        }
+
+        public isTeamBWinner(): boolean {
+            return this.winner && this.winner === this.teamB;
         }
 
         public setLeftChild(match: Match): void {

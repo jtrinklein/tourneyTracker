@@ -1,49 +1,111 @@
-@maxlevels: 8;
+body {
+    padding: 0px;
+}
+.teams {
+    background: #222;
+    padding: 50px 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 12vw;
+    height: 100vh;
+    display: inline-block;
 
-@column-gap-size: 20px;
-@team-height: 30px;
-@team-width: 100px;
-@level-0-spacing: 8px;
-@unit-size: @team-height * 2px + @level-0-spacing;
+    .add-team {
+        width: 12vw;
+        background: #428bca;
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        height: 45px;
+        padding: 5px;
+    }
 
-.generate-spacing-for-levels(@level) when (@level > -1){
-    .generate-spacing-for-levels(@level - 1);
-
-    .level-@{level} > .match {
-        //((Math.pow(2, level) - 1) * this.matchUnitSize / 2) + 'px';
-        margin-top: (pow(2, @level) - 1) * @unit-size / 2px;
-
-        //((Math.pow(2, level) - 1) * this.matchUnitSize + spacing) + 'px'
-        margin-bottom: (pow(2, @level) - 1) * @unit-size + @level-0-spacing;
+    .team {
+        position: relative;
+        padding: 10px;
+        color: white;
+        .label {
+            color: white;
+            text-shadow: 2px 2px 2px #f1f1f1;
+            font-size: 1.5rem;
+            width: 100%;
+        }
+        &:hover {
+            background: #555;
+            a.remove {
+                display: block;
+                text-decoration: none;
+                cursor: pointer;
+            }
+            a.remove:active {
+                color: #d9534f;
+                background-color: white;
+            }
+        }
+        a.remove {
+            position: absolute;
+            right: 0px;
+            width: 2vw;
+            top: 0px;
+            height: 100%;
+            color: white;
+            font-size: 2em;
+            text-decoration: none;
+            text-align: center;
+            line-height: 1.5em;
+            background-color: #d9534f;
+            text-shadow: none;
+            display: none;
+        }
     }
 }
+.matches {
+    width: 88vw;
+    overflow: auto;
+    padding-top: 45px;
+    height: 100vh;
+    box-sizing: border-box;
+    display: inline-block;
+    background: #f1f1f1;
 
-.generate-spacing-for-levels(@maxlevels);
+    .header {
+        height: 45px;
+        position: fixed;
+        top: 0;
+        left: 12vw;
+        fill: white;
+        background-color: darken(#428bca, 30%);
 
-.level {
-
-    margin-right: @column-gap-size;
-    & > .match {
-
-        &:last-child {
-            margin-bottom: @level-0-spacing;
+        width: 88vw;
+    }
+    .match-team {
+        rect {
+            fill: transparent;
+            stroke: transparent;
         }
-
-        & > .match-team-name {
-            width: @team-width;
-            height: @team-height;
-            padding: (@team-height / 6px) 4px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-
-            &.team-a {
-                background-color: #aaa;
+        line {
+            stroke: #428bca;
+        }
+        &:hover {
+            cursor: pointer;
+            rect {
+                stroke: black;
+                stroke-width: 3px;
+                fill: #222;
+                rx: 3px;
+                ry: 3px;
             }
-
-            &.team-b {
-                background-color: #ccc;
+            text {
+                fill: white;
             }
         }
+    }
+    .winner {
+        stroke: #5cb85c;
+    }
+    .loser {
+        stroke: #d9534f;
     }
 }
 // injector
