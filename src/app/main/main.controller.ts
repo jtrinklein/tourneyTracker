@@ -5,7 +5,7 @@ module tourneyTracker {
         teams: Array<Team>;
         addTeam(name: string);
         removeTeam(team: Team);
-        square(num: number);
+        exp2(num: number); // 2^x
         matches: Array<Match>;
         createMatchTree(): void;
         levels: Array<Array<Match>>;
@@ -23,7 +23,7 @@ module tourneyTracker {
             this.matchUnitSize = this.teamHeight * 2 + this.spacingValue;
             $scope.teams = new Array<Team>();
             $scope.matches = new Array<Match>();
-            $scope.square = (num) => Math.pow(2, num);
+            $scope.exp2 = (num) => Math.pow(2, num);
             $scope.addTeam = this.addTeam.bind(this);
             $scope.removeTeam = this.removeTeam.bind(this);
             $scope.createMatchTree = this.createMatchTree.bind(this);
