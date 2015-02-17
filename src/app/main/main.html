@@ -1,31 +1,75 @@
-<div class="container">
+<div class="teams" ng-include="'app/main/teams.html'">
+</div><!--
+--><div class="matches">
 
-  <div ng-include="'components/navbar/navbar.html'"></div>
+    <button class="btn btn-success" ng-click="createMatchTree()">Build Matches</button>
+    <svg class="header" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1"
+        height="45px"
+        width="100%">
+        <text
+            ng-repeat="level in levels"
+            y="30"
+            ng-attr-x="{{$index * 200 + 10}}"
+            x=""
+            font-size="30"
+        >
+          Level {{$index}}
+        </text>
+    </svg>
+    <svg class="tree" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1"
+        width="100%"
+        ng-attr-height="{{(levels[0].length + 2) * 200 + 'px'}}"
+        height="">
+        <g ng-repeat="level in levels"
+            ng-attr-transform="translate({{$index * 200 + 10}}, 0)"
+            transform="">
 
-  <div class="jumbotron">
-    <h1>Teams:</h1>
-    <p><label ng-repeat="team in teams">{{team.name}},</label>
-    </p>
-    <div class="row">
-        <div>Matches:</div>
-        <div ng-class="'level level-' + $index + ' col-xs-1'" ng-repeat="level in levels">
-            <div>Level {{$index}}</div>
-            <div class="match" ng-repeat="match in level">
-                <div class="match-team-name team-a" ng-click="match.teamAWon()">{{match.getTeamNameA()}}</div>
-                <div class="match-team-name team-b" ng-click="match.teamBWon()">{{match.getTeamNameB()}}</div>
-            </div>
-        </div>
-    </div>
-    <p><label for="addTeam"
-        >Add Team:</label
-        ><input name="addTeam" type="text" ng-model="newTeamName"
-        /><button type="button" class="btn btn-sm btn-success" ng-click="addTeam(newTeamName); newTeamName = '';">Add</button></p>
-    <p><button type="button" class="btn btn-sm btn-success" ng-click="createMatchTree();">mktree</button></p>
-  </div>
-  <hr>
+            <g ng-repeat="match in level"
+                stroke-width="1"
+                ng-attr-transform="translate(0, {{(100 * (((exp2($parent.$index)) * ($index + 1)) - 1)) + 50 - (50 * (exp2($parent.$index) - 1))}})"
+                transform="">
+                <g class="match-team" ng-click="match.teamAWon()" ng-class="{winner: match.isTeamAWinner(), loser: match.isTeamBWinner()}">
+                    <rect width="130" height="20" x="0" y="-16" />
+                    <text
+                        ng-class="{winner: match.isTeamAWinner()}"
+                    >
+                    {{match.getTeamNameA()}}
+                    </text>
+                    <line
+                        y1="4"
+                        x1="0"
+                        y2="4"
+                        x2="130"
+                    />
+                </g>
 
-  <div class="footer">
-    <p>With ♥ from <a href="https://twitter.com/Swiip">@Swiip</a></p>
-  </div>
+                <g class="match-team" ng-click="match.teamBWon()" ng-class="{winner: match.isTeamBWinner(), loser: match.isTeamAWinner()}">
+                    <rect width="130" height="20" x="0" y="24" />
+                    <text
+                        y="40"
+                    >
+                    {{match.getTeamNameB()}}
+                    </text>
+                    <line
+                        y1="44"
+                        x1="0"
+                        y2="44"
+                        x2="130"
+                    />
+                </g>
 
+
+                <!-- <line
+                    ng-if="levels[$parent.$index + 1]"
+                    y1="22"
+                    x1="130"
+                    ng-attr-y2="{{(75*($parent.$index + 1)) - (25 + (75 * ($parent.$index + 1))) * ($index % 2)}}"
+                    y2=""
+                    x2="200"
+                    ng-click="match.teamBWon()"
+                /> -->
+
+            </g>
+        </g>
+    </svg>
 </div>
