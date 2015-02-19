@@ -1,14 +1,7 @@
 /// <reference path='../Player/Player.ts' />
+/// <reference path='./ITeam.d.ts' />
 
 module tourneyTracker {
-    export interface ITeam {
-        members: Array<Player>;
-        wins: number;
-        losses: number;
-        ties: number;
-        name: string;
-        addPlayer(player: Player);
-    }
     export class Team implements ITeam {
         public wins: number;
         public losses: number;
