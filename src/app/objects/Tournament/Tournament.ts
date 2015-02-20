@@ -6,21 +6,35 @@
 module tourneyTracker {
     export class Tournament implements ITournament {
 
-        private teams: Array<ITeam>;
+        private teams: Array<Team>;
         private levels: Array<Array<Match>>;
+        private matchStore: Map<string, Match>;
+        private lastId: number;
 
         constructor() {
             //no-op
-            this.teams = new Array();
+            this.teams = new Array<ITeam>();
+            this.matchStore = new Map<string, Match>();
+            this.lastId = new Date().getTime();
         }
 
         public serialize(): string {
             //TODO: actually serialize
             return JSON.stringify(this.levels);
         }
+
         public deserialize(data: string): void {
             //TODO: actually deserialize
             this.levels = JSON.parse(data);
+        }
+
+        private nextId(): string {
+            this.lastId++;
+            return this.lastId.toString();
+        }
+
+        public getMatchById(matchId: string): Match {
+            return this.matchStore[matchId];
         }
 
         public addTeam(name: string): void {
@@ -41,14 +55,18 @@ module tourneyTracker {
             return this.levels;
         }
 
+        private createMatch(): Match {
+            return new Match(this.nextId());
+        }
+
         public createMatchTree(): Array<Array<Match>> {
-            var root: Match = new Match();
+            var root: Match = this.createMatch();
             var requiredLeafNodes: number = Math.ceil(this.teams.length / 2);
             var openNodes: Array<Match> = [root];
             var leafNodes: number = 1;
             while (leafNodes < requiredLeafNodes) {
                 var node: Match = openNodes[0];
-                var newLeaf: Match = new Match();
+                var newLeaf: Match = this.createMatch();
                 openNodes.push(newLeaf);
                 if (!node.leftChild) {
                     node.setLeftChild(newLeaf);
