@@ -1,7 +1,6 @@
 <div class="teams" ng-include="'app/main/teams.html'">
-</div><!--
---><div class="matches">
-
+</div>
+<div class="matches">
     <button class="btn btn-success" ng-click="createMatchTree()">Build Matches</button>
     <svg class="header" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1"
         height="45px"
@@ -23,7 +22,6 @@
         <g ng-repeat="level in levels"
             ng-attr-transform="translate({{$index * 200 + 10}}, 0)"
             transform="">
-
             <g ng-repeat="match in level"
                 stroke-width="1"
                 ng-attr-transform="translate(0, {{(100 * (((exp2($parent.$index)) * ($index + 1)) - 1)) + 50 - (50 * (exp2($parent.$index) - 1))}})"
@@ -31,35 +29,28 @@
                 <g class="match-team" ng-click="match.teamAWon()" ng-class="{winner: match.isTeamAWinner(), loser: match.isTeamBWinner()}">
                     <rect width="130" height="20" x="0" y="-16" />
                     <text
-                        ng-class="{winner: match.isTeamAWinner()}"
+                        ng-class="{winner: match.isTeamAWinner()}" dx="0.2em" dy="-0.25em"
                     >
                     {{match.getTeamNameA()}}
-                    </text>
-                    <line
-                        y1="4"
-                        x1="0"
-                        y2="4"
-                        x2="130"
-                    />
+                    <text>
                 </g>
 
                 <g class="match-team" ng-click="match.teamBWon()" ng-class="{winner: match.isTeamBWinner(), loser: match.isTeamAWinner()}">
-                    <rect width="130" height="20" x="0" y="24" />
+                    <rect width="130" height="20" x="0" y="24" dx="0.25em" dy="0.2em"/>
                     <text
                         y="40"
+                        dx="0.2em"
+                        dy="-0.25em"
                     >
                     {{match.getTeamNameB()}}
                     </text>
-                    <line
-                        y1="44"
-                        x1="0"
-                        y2="44"
-                        x2="130"
-                    />
                 </g>
 
+                <path class="match-line" ng-if="levels[$parent.$index + 1] && (match.isTeamAWinner() || match.isTeamBWinner()) "
+                      ng-attr-d="{{match.generatePath($index)}}" />
 
-                <!-- <line
+                <!--
+                 <line class="match-line"
                     ng-if="levels[$parent.$index + 1]"
                     y1="22"
                     x1="130"
@@ -67,7 +58,8 @@
                     y2=""
                     x2="200"
                     ng-click="match.teamBWon()"
-                /> -->
+                />
+              -->
 
             </g>
         </g>

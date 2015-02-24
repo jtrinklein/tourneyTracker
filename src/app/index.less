@@ -1,6 +1,16 @@
 body {
     padding: 0px;
 }
+
+.main {
+  font-size:0;
+  width: 100vw;
+}
+
+.main > div {
+  font-size: 1.0rem;
+}
+
 .teams {
     background: #222;
     padding: 50px 0;
@@ -82,9 +92,6 @@ body {
     .match-team {
         rect {
             fill: transparent;
-            stroke: transparent;
-        }
-        line {
             stroke: #428bca;
         }
         &:hover {
@@ -100,6 +107,10 @@ body {
                 fill: white;
             }
         }
+    }
+    .match-line {
+      stroke: #428bca;
+      fill:transparent;
     }
     .winner {
         stroke: #5cb85c;
