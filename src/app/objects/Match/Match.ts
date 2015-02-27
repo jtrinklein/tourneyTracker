@@ -1,23 +1,21 @@
 /// <reference path='../ISerializable.d.ts' />
+/// <reference path='../IAmIdentifiable.d.ts' />
 
 module tourneyTracker {
-    export interface MatchIdStore extends Object {
-        self: string;
-        parent?: string;
-        leftChild?: string;
-        rightChild?: string;
+    export interface ChildIdStore extends Object {
+        leftId?: string;
+        rightId?: string;
     }
-    export class Match implements ISerializable{
+    export class Match implements ISerializable, IAmIdentifiable {
         public teamA: Team;
         public teamB: Team;
         public winner: Team;
         public loser: Team;
         public parent: Match;
         public leftChild: Match;
-        public leftChildId: string;
         public rightChild: Match;
-        public rightChildId: string;
         public ids: MatchIdStore;
+        public id: string;
 
         constructor(id: string) {
             this.ids = {
