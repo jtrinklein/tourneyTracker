@@ -47,7 +47,7 @@
                 </g>
 
                 <path class="match-line" ng-if="levels[$parent.$index + 1] && (match.isTeamAWinner() || match.isTeamBWinner()) "
-                      ng-attr-d="{{match.generatePath($index)}}" />
+                      ng-attr-d="{{match.generatePath((exp2($parent.$parent.$index) * 50), $parent.$index)}}" />
 
                 <!--
                  <line class="match-line"

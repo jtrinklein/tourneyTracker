@@ -73,21 +73,20 @@ module tourneyTracker {
             this.teamB = match.winner;
         }
 
-        public generatePath(parentCoord: number): string {
+        public generatePath(parentCoord: number, matchIndex: number): string {
           console.log('generate path');
           if (!this.isTeamAWinner() && !this.isTeamBWinner()) {
             return "";
           }
-          console.log(parentCoord);
 
-          if (this.isTeamAWinner()){
-            var parentYCoord: number = parentCoord + (-6);
-            return "M130 -6 L165 -6 L165 " + parentYCoord.toString();
+          var parentYCoord: number = parentCoord;
+          if (matchIndex % 2 === 0) {
+             parentYCoord = parentCoord + 12;
           }
-          if (this.isTeamBWinner()) {
-            var parentYCoord: number = parentCoord + 34;
-            return "M130 34 L165 34 L165 " + parentYCoord.toString();
+          else {
+             parentYCoord = -(parentCoord) + 12;
           }
+            return "M130 12 L165 12 L165 " + (parentYCoord).toString() + " L200 " + (parentYCoord).toString() ;
         }
     }
 }
