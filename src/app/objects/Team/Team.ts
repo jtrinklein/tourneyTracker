@@ -12,6 +12,7 @@ module tourneyTracker {
 
         constructor(name?: string) {
             this.name = name;
+            this.members = new Array<Player>();
         }
 
         public addPlayer(player: Player): void {
@@ -19,6 +20,27 @@ module tourneyTracker {
                 return;
             }
             this.members.push(player);
+        }
+
+        public serialize(): string {
+            return JSON.stringify({
+                id: this.id,
+                name: this.name,
+                wins: this.wins,
+                losses: this.losses,
+                ties: this.ties,
+                members: this.members.map((p: Player): string => { return JSON.stringify(p); })
+            });
+        }
+
+        public deserialize(data: string): void {
+            var teamData: Object = JSON.parse(data);
+            this.id = teamData['id'];
+            this.name = teamData['name'];
+            this.wins = teamData['wins'];
+            this.losses = teamData['losses'];
+            this.ties = teamData['ties'];
+            this.members = teamData['members'].map((s: string): Player => { return JSON.parse(s); });
         }
     }
 }

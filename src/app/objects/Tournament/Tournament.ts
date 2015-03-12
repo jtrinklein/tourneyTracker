@@ -8,33 +8,42 @@ module tourneyTracker {
 
         private teams: Array<Team>;
         private levels: Array<Array<Match>>;
-        private matchStore: Map<string, Match>;
         private lastId: number;
+        private matchRoot: Match;
+        private id: string;
 
         constructor() {
-            //no-op
+            this.id = new Date().getTime().toString();
             this.teams = new Array<ITeam>();
-            this.matchStore = new Map<string, Match>();
             this.lastId = new Date().getTime();
         }
 
         public serialize(): string {
-            //TODO: actually serialize
-            return JSON.stringify(this.levels);
+
+            return JSON.stringify({
+                id: this.id,
+                teams: this.teams.map((team: Team): string => { return team.serialize(); }, this),
+                matchRoot: this.matchRoot.serialize()
+            });
         }
 
-        public deserialize(data: string): void {
-            //TODO: actually deserialize
-            this.levels = JSON.parse(data);
+        public deserialize(dataString: string): void {
+            var data: Object = JSON.parse(dataString);
+            this.id = data['id'];
+            this.teams = data['teams']
+                .map((tData: string): Team => {
+                    var t: Team = new Team();
+                    t.deserialize(tData);
+                    return t;
+                });
+            this.matchRoot = new Match('');
+            this.matchRoot.deserialize(data['matchRoot']);
+            this.createLevelLists(this.matchRoot);
         }
 
-        private nextId(): string {
+        public nextId(): string {
             this.lastId++;
             return this.lastId.toString();
-        }
-
-        public getMatchById(matchId: string): Match {
-            return this.matchStore[matchId];
         }
 
         public addTeam(name: string): void {
@@ -60,9 +69,9 @@ module tourneyTracker {
         }
 
         public createMatchTree(): Array<Array<Match>> {
-            var root: Match = this.createMatch();
+            this.matchRoot = this.createMatch();
             var requiredLeafNodes: number = Math.ceil(this.teams.length / 2);
-            var openNodes: Array<Match> = [root];
+            var openNodes: Array<Match> = [this.matchRoot];
             var leafNodes: number = 1;
             while (leafNodes < requiredLeafNodes) {
                 var node: Match = openNodes[0];
@@ -79,7 +88,7 @@ module tourneyTracker {
 
             this.placeTeamsInOpenNodes(this.teams, openNodes);
 
-            this.levels = this.createLevelLists(root);
+            this.levels = this.createLevelLists(this.matchRoot);
 
             return this.levels;
         }

@@ -14,22 +14,72 @@ module tourneyTracker {
         public parent: Match;
         public leftChild: Match;
         public rightChild: Match;
-        public ids: MatchIdStore;
         public id: string;
 
         constructor(id: string) {
-            this.ids = {
-                self: id
-            }
+            this.id = id;
         }
 
         public serialize(): string {
+            var serializedProperties: Array<string> = [
+                'id', 'leftChild', 'rightChild', 'teamA', 'teamB', 'winner', 'loser'
+            ];
+            var data: string = serializedProperties
+                .map((propName: string): string => {
+                    var sVal: string;
+                    if (propName === 'id') {
+                        sVal = this[propName];
+                    } else {
+                        var prop: ISerializable = this[propName];
+                        if (prop) {
+                            sVal = prop.serialize();
+                        }
+                    }
+                    return propName + ':"' + sVal + '"';
+                }, this)
+                .join(',');
 
-            return '';
+            return '{' + data + '}';
         }
 
-        public deserialize(data: string): void {
-            // no-op
+        public deserialize(dataString: string): void {
+            var data: Object = JSON.parse(dataString);
+
+            this.id = data['id'];
+
+            ['leftChild', 'rightChild']
+                .forEach((propName: string): void => {
+                    var propData: string = data[propName];
+                    if (propData) {
+                        var match: Match = new Match('');
+                        match.deserialize(propData);
+                        match.parent = this;
+                        this[propName] = match;
+                    }
+                }, this);
+
+            ['teamA', 'teamB']
+                .forEach((propName: string): void => {
+                    var propData: string = data[propName];
+                    if (propData) {
+                        var team: Team = new Team();
+                        team.deserialize(propData);
+                        this[propName] = team;
+                    }
+                }, this);
+
+
+                if (data['winner']) {
+                    var team: Team = new Team();
+                    team.deserialize(data['winner']);
+                    this.setWinner(team);
+                }
+
+                if (data['loser']) {
+                    var team: Team = new Team();
+                    team.deserialize(data['winner']);
+                    this.setWinner(team);
+                }
         }
 
         private setWinner(team: Team): void {

@@ -11,6 +11,8 @@ module tourneyTracker {
         createMatchTree(): void;
         levels: Array<Array<Match>>;
         saveTournament(): void;
+        loadTournament(): void;
+        data: string;
     }
 
     export class MainCtrl {
@@ -26,6 +28,7 @@ module tourneyTracker {
             this.matchUnitSize = this.teamHeight * 2 + this.spacingValue;
 
             $scope.saveTournament = this.saveTournament.bind(this);
+            $scope.loadTournament = this.loadTournament.bind(this);
             $scope.exp2 = (num) => Math.pow(2, num);
             $scope.addTeam = this.addTeam.bind(this);
             $scope.removeTeam = this.removeTeam.bind(this);
@@ -38,7 +41,11 @@ module tourneyTracker {
         }
         public saveTournament(): void {
             var data: string = this.tournament.serialize();
+            this.$scope.data = data;
             console.log(data);
+        }
+        public loadTournament(): void {
+            this.tournament.deserialize(this.$scope.data);
         }
 
         public createMatchTree(): void {
